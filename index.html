@@ -1,0 +1,116 @@
+display: none;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        /* Анімації */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.6; }
+        }
+
+        @keyframes btnShine {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+
+        /* Інстаграм кнопка */
+        .instagram-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: var(--neon-purple);
+            text-decoration: none;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .instagram-link::before {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--neon-purple);
+            transform: scaleX(0);
+            transition: 0.3s;
+        }
+
+        .instagram-link:hover::before {
+            transform: scaleX(1);
+        }
+    </style>
+</head>
+<body>
+    <div class="particles"></div>
+    
+    <div class="cyber-container">
+        <h1 class="title">CYBER TIKTOK PRO</h1>
+
+        <div class="input-box">
+            <input type="url" class="input-field" id="tiktokUrl" placeholder="✂️ Вставте TikTok посилання...">
+        </div>
+
+        <button class="cyber-btn" onclick="downloadVideo()">
+            🚀 ЗНЯТИ ВОДЯНИЙ ЗНАК
+        </button>
+
+        <a href="https://instagram.com/artur_kater4" class="instagram-link" target="_blank">
+            @artur_kater4
+        </a>
+
+        <div class="video-box" id="videoBox">
+            <video controls id="videoPlayer"></video>
+            <a id="downloadLink" class="cyber-btn" style="margin-top:15px; display:none;">⬇️ СКАЧАТИ</a>
+        </div>
+    </div>
+
+    <script>
+        async function downloadVideo() {
+            const url = document.getElementById('tiktokUrl').value;
+            const videoBox = document.getElementById('videoBox');
+            const video = document.getElementById('videoPlayer');
+            const downloadLink = document.getElementById('downloadLink');
+
+            if (!url) {
+                showError('❗ Вставте посилання!');
+                return;
+            }
+
+            try {
+                // Використовуємо стабільний API
+                const apiUrl = https://api.tik.wtf/api/video/${encodeURIComponent(url)};
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.data.play) {
+                    video.src = data.data.play;
+                    downloadLink.href = data.data.play;
+                    downloadLink.style.display = 'block';
+                    videoBox.style.display = 'block';
+                    video.play();
+                } else {
+                    throw new Error('Невірне посилання');
+                }
+            } catch (error) {
+                showError('⚠️ Помилка: ' + error.message);
+            }
+        }
+
+        function showError(message) {
+            const input = document.getElementById('tiktokUrl');
+            input.style.borderColor = 'red';
+            input.placeholder = message;
+            setTimeout(() => {
+                input.style.borderColor = var(--neon-cyan);
+                input.placeholder = '✂️ Вставте TikTok посилання...';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
